@@ -18,6 +18,32 @@
     } 
     echo "Connected successfully (".$db->host_info.")";
     
+    $sql = "SELECT firstName, lastName, city FROM `customers` WHERE state = 'CA' order by lastname";
+    $results = $db->prepare($sql);
+    $results -> execute();
+    $results -> store_result();
+    $results -> bind_result($first, $last, $city);
+    
+    echo "<h1>Query</h1>";
+    echo "<table style=\"width:100%\">
+  <tr>
+    <th>Firstname</th>
+    <th>Lastname</th> 
+    <th>City</th>
+  </tr>";
+    while($results -> fetch()) {
+        echo "<tr>
+    <td><center>$first</center></td>
+    <td><center>$last</center></td> 
+    <td><center>$city</center></td>
+  </tr>";
+        // echo "<br />First Name: ".$first;
+        // echo "<br />Last Name: ".$last;
+        // echo "<br />City: ".$city;
+        }
+        echo "</table>";
+    $results->free_result();
+    
     $simple = "SELECT * FROM `products` WHERE `version` = 2.0 LIMIT 0, 30 ";
     $simpleresults = $db->prepare($simple);
     $simpleresults -> execute();
@@ -61,6 +87,8 @@
         echo "<br />Registration Date: " . $regDate;
         $count++;
         }
+        
+    $intermediateresults -> free_result();
     
     $db->close();
     
